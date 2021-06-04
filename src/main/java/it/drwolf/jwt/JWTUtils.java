@@ -1,8 +1,13 @@
 package it.drwolf.jwt;
 
+import com.auth0.jwk.Jwk;
+import com.auth0.jwk.JwkException;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.Verification;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.typesafe.config.Config;
 import it.drwolf.exceptions.HttpException;
@@ -10,13 +15,16 @@ import play.libs.Json;
 import play.mvc.Http;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.ParameterizedType;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+@Singleton
 public class JWTUtils<U> {
 
     protected final Class<U> resourceClass;
@@ -27,6 +35,20 @@ public class JWTUtils<U> {
         this.delegate = JWT.require(getAlgorithm()).withIssuer(getIssuer()).build();
         this.resourceClass = (Class<U>) ((ParameterizedType) this.getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
+    }
+
+    public DecodedJWT verifyJWKS(String accessToken){
+        try {
+            DecodedJWT decodedJwt = JWT.decode(accessToken);
+            JwkProvider jwkProvider = new JwkProviderBuilder(config.getString("jwks.domain")).build();
+            Jwk jwk = jwkProvider.get(decodedJwt.getKeyId());
+            Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
+            Verification verifier = JWT.require(algorithm);
+            verifier.build().verify(decodedJwt);
+            return decodedJwt;
+        } catch (JwkException e) {
+            throw new HttpException("Error verifying JWKS Token", e);
+        }
     }
 
     @Inject

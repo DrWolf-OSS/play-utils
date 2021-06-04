@@ -20,6 +20,16 @@ jwt {
 
 per il formato della scadenza vedere [qui](https://www.playframework.com/documentation/2.8.x/ConfigFile#Duration-format)
 
+## verifica JWKS
+
+`it.drwolf.jwt.JWTUtils.verifyJWKS(String authToken)`
+
+il dominio per la verifica va inserito nella configurazione
+
+```
+jwks.domain =  "https://TENANT.eu.auth0.com/"
+```
+
 ## Eccezioni
 
 aggiungere ad `application.conf` il global handler
