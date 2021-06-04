@@ -13,6 +13,6 @@ public class LoggedIn extends Authenticator {
 
     @Override
     public Optional<String> getUsername(Http.Request req) {
-       return Optional.of(jwtUtils.getUser(req).toString());
+       return Optional.of(jwtUtils.getUser(req, Object.class).toString());
     }
 }

@@ -25,22 +25,20 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class JWTUtils<U> {
+public class JWTUtils {
 
-    protected final Class<U> resourceClass;
 
     private final com.auth0.jwt.JWTVerifier delegate;
+    private final JwkProvider jwkProvider;
 
     public JWTUtils() {
         this.delegate = JWT.require(getAlgorithm()).withIssuer(getIssuer()).build();
-        this.resourceClass = (Class<U>) ((ParameterizedType) this.getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0];
+        this.jwkProvider = new JwkProviderBuilder(config.getString("jwks.domain")).build();
     }
 
     public DecodedJWT verifyJWKS(String accessToken){
         try {
             DecodedJWT decodedJwt = JWT.decode(accessToken);
-            JwkProvider jwkProvider = new JwkProviderBuilder(config.getString("jwks.domain")).build();
             Jwk jwk = jwkProvider.get(decodedJwt.getKeyId());
             Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
             Verification verifier = JWT.require(algorithm);
@@ -54,7 +52,7 @@ public class JWTUtils<U> {
     @Inject
     private Config config;
 
-    public String create(U user) {
+    public String create(Object user) {
         com.auth0.jwt.JWTCreator.Builder builder = JWT.create().withIssuer(getIssuer());
         builder.withExpiresAt(getExpiration());
         builder.withClaim(getUserClaim(), Json.toJson(user).toString());
@@ -94,12 +92,12 @@ public class JWTUtils<U> {
         return getTokenFromQueryString(request.queryString());
     }
 
-    public U getUser(Http.Request request) {
+    public <U> U getUser(Http.Request request, Class<U> userClass) {
         DecodedJWT decoded = this.verify(getTokenFromRequest(request).orElseThrow(() -> new HttpException("Token not found",
                 HttpException.Status.UNAUTHORIZED)));
         try {
             JsonNode userAsJson = Json.parse(decoded.getClaim(getUserClaim()).asString());
-            return Json.fromJson(userAsJson, resourceClass);
+            return Json.fromJson(userAsJson, userClass);
         } catch (Exception e) {
             throw new HttpException("Invalid user data", HttpException.Status.UNAUTHORIZED);
         }
