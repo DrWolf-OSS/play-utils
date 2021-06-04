@@ -39,8 +39,4 @@ try {
 
 ## Logger
 
-fate implementare `it.drwolf.base.interfaces.Loggable` alla vostra classe e loggate con
-
-`this.logger().info(...)`  
-
-ecc..
+fate implementare `it.drwolf.base.interfaces.Loggable` alla vostra classe e loggate con `this.logger().info(...)`  ecc..
