@@ -1,18 +1,18 @@
 package it.drwolf.base.interfaces;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * It provides an instance of org.slf4j.Logger
- *
- * @author spaladini
- *
- */
 public interface Loggable {
 
-	public default Logger logger() {
+	static void setLogLevel(String logLevel, String packageName) {
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		loggerContext.getLogger(packageName).setLevel(Level.toLevel(logLevel));
+	}
+
+	default Logger logger() {
 		return LoggerFactory.getLogger(this.getClass());
 	}
 
