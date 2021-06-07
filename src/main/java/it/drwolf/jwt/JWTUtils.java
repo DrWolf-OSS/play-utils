@@ -8,7 +8,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.Config;
 import it.drwolf.exceptions.HttpException;
 import play.libs.Json;
@@ -90,12 +90,11 @@ public class JWTUtils {
 		return getTokenFromQueryString(request.queryString());
 	}
 
-	public <U> U getUser(Http.Request request, Class<U> userClass) {
+	public ObjectNode getUser(Http.Request request) {
 		DecodedJWT decoded = this.verify(getTokenFromRequest(request).orElseThrow(
 				() -> new HttpException("Token not found", HttpException.Status.UNAUTHORIZED)));
 		try {
-			JsonNode userAsJson = Json.parse(decoded.getClaim(getUserClaim()).asString());
-			return Json.fromJson(userAsJson, userClass);
+			return (ObjectNode) Json.parse(decoded.getClaim(getUserClaim()).asString());
 		} catch (Exception e) {
 			throw new HttpException("Invalid user data", HttpException.Status.UNAUTHORIZED);
 		}

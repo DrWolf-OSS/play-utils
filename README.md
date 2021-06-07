@@ -4,7 +4,7 @@
 
 ## JWT
 
-Utilizzare la classe `it.drwolf.jwt.JWTUtils<U>` 
+Utilizzare la classe `it.drwolf.jwt.JWTUtils<U>`
 
 i metodi pubblici sono `create` , `getTokenFromRequest` e `getUser`
 
@@ -15,6 +15,7 @@ jwt {
   issuer = drwolf.it
   userClaim = user
   expiration = 8 h
+  username = username
 }
 ```
 
@@ -37,14 +38,16 @@ aggiungere ad `application.conf` il global handler
 ```
 play.http.errorHandler = it.drwolf.exceptions.ErrorHandler
 ```
-in gnerale lanciare sempre `it.drwolf.exceptions.HttpException`, non restituire `Results.badRequest` o `Results.internalServerError` nei controller
+
+in gnerale lanciare sempre `it.drwolf.exceptions.HttpException`, non restituire `Results.badRequest`
+o `Results.internalServerError` nei controller
 
 ```java
-try {
-    // do things...
-} catch (Exception e){
-    throw new HttpException("Your message", e, HttpException.Status.SOME_STATUS);
-}
+try{
+		// do things...
+		}catch(Exception e){
+		throw new HttpException("Your message",e,HttpException.Status.SOME_STATUS);
+		}
 ```
 
 ## Logger
