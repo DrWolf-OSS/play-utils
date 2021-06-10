@@ -15,7 +15,6 @@ public class LoggedIn extends Authenticator {
 
 	@Inject
 	public LoggedIn() {
-		super();
 	}
 
 	@Override
