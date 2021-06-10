@@ -8,6 +8,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.Config;
 import it.drwolf.exceptions.HttpException;
@@ -16,6 +18,7 @@ import play.mvc.Http;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.security.Principal;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.List;
@@ -37,10 +40,14 @@ public class JWTUtils {
 		this.jwkProvider = new JwkProviderBuilder(config.getString("jwks.domain")).build();
 	}
 
-	public String create(ObjectNode user) {
+	public String create(Principal user) {
 		com.auth0.jwt.JWTCreator.Builder builder = JWT.create().withIssuer(getIssuer());
 		builder.withExpiresAt(getExpiration());
-		builder.withClaim(getUserClaim(), Json.toJson(user).toString());
+		try {
+			builder.withClaim(getUserClaim(), new ObjectMapper().writeValueAsString(Json.toJson(user)));
+		} catch (JsonProcessingException e) {
+			throw new HttpException("Error encoding user in token", e);
+		}
 		return builder.sign(getAlgorithm());
 
 	}

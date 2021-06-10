@@ -15,9 +15,10 @@ jwt {
   issuer = drwolf.it
   userClaim = user
   expiration = 8 h
-  username = username
 }
 ```
+
+L'utente da inserire nei claim deve implementare `java.security.Principal`
 
 per il formato della scadenza vedere [qui](https://www.playframework.com/documentation/2.8.x/ConfigFile#Duration-format)
 
