@@ -6,9 +6,11 @@
 
 Utilizzare la classe `it.drwolf.jwt.JWTUtils<U>`
 
-i metodi pubblici sono `create` , `getTokenFromRequest` e `getUser`
+I metodi pubblici sono `create` , `getTokenFromRequest` e `getUser`
 
-è possibile aggiungere questi parametri a `applications.conf`: (questi sono i default)
+L'utente da inserire nei claim deve implementare `java.security.Principal`
+
+È possibile aggiungere questi parametri a `applications.conf`: (questi sono i default)
 
 ```
 jwt {
@@ -17,8 +19,6 @@ jwt {
   expiration = 8 h
 }
 ```
-
-L'utente da inserire nei claim deve implementare `java.security.Principal`
 
 per il formato della scadenza vedere [qui](https://www.playframework.com/documentation/2.8.x/ConfigFile#Duration-format)
 
