@@ -37,7 +37,7 @@ public class JWTUtils {
 		this.jwkProvider = new JwkProviderBuilder(config.getString("jwks.domain")).build();
 	}
 
-	public String create(Object user) {
+	public String create(ObjectNode user) {
 		com.auth0.jwt.JWTCreator.Builder builder = JWT.create().withIssuer(getIssuer());
 		builder.withExpiresAt(getExpiration());
 		builder.withClaim(getUserClaim(), Json.toJson(user).toString());
