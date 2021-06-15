@@ -6,7 +6,7 @@
 
     <groupId>it.drwolf</groupId>
     <artifactId>play-utils</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
 
     <packaging>jar</packaging>
 
