@@ -26,7 +26,7 @@ public final class CommonUtils {
 		return String.format("%s-%s.%s", baseName, timestamp, extension);
 	}
 
-	public static List<String> convertCommaSeparatedToListOfString(String stringsSeparatedByComma) {
+	public static List<String> convertToListOfStrings(String stringsSeparatedByComma) {
 		List<String> list = new ArrayList<>();
 		String[] splitted = stringsSeparatedByComma.split(",");
 		for (String s : splitted) {
@@ -35,17 +35,39 @@ public final class CommonUtils {
 		return list;
 	}
 
-	public static Set<Long> convertToLongs(Set<Integer> ints) {
+	public static Set<String> convertToSetOfStrings(String stringsSeparatedByComma) {
+		Set<String> set = new HashSet<>();
+		String[] splitted = stringsSeparatedByComma.split(",");
+		for (String s : splitted) {
+			set.add(s.trim());
+		}
+		return set;
+	}
+
+	public static Set<Long> convertToSetOfLongs(Set<Integer> ints) {
 		return ints.stream().map(i -> Long.valueOf(i)).collect(Collectors.toSet());
 	}
 
-	public static Set<Long> convertToLongs(String longsSeparatedByComma) {
+	public static List<Long> convertToListOfLongs(List<Integer> ints) {
+		return ints.stream().map(i -> Long.valueOf(i)).collect(Collectors.toList());
+	}
+
+	public static Set<Long> convertToSetOfLongs(String longsSeparatedByComma) {
 		Set<Long> set = new HashSet<>();
-		String[] inputInternalCategoriesId = longsSeparatedByComma.split(",");
-		for (String icid : inputInternalCategoriesId) {
-			set.add(Long.parseLong(icid));
+		String[] splitted = longsSeparatedByComma.split(",");
+		for (String s : splitted) {
+			set.add(Long.parseLong(s));
 		}
 		return set;
+	}
+
+	public static List<Long> convertToListOfLongs(String longsSeparatedByComma) {
+		List<Long> list = new ArrayList<>();
+		String[] splitted = longsSeparatedByComma.split(",");
+		for (String s : splitted) {
+			list.add(Long.parseLong(s));
+		}
+		return list;
 	}
 
 	public static byte[] zip(byte[] source, String filename) {

@@ -9,6 +9,9 @@ import java.util.Date;
 
 public class DateUtils {
 
+	private DateUtils() {
+	}
+
 	public static LocalDate convertFromString(String dateAsString, String datePattern) {
 		LocalDate localDate = null;
 		if (dateAsString != null && !dateAsString.trim().isEmpty()) {

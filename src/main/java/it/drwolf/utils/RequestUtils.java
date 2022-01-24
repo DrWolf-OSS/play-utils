@@ -1,7 +1,7 @@
 package it.drwolf.utils;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import play.mvc.Http.Request;
 
@@ -47,13 +47,21 @@ public final class RequestUtils {
 	 * @param parameterName
 	 * @return
 	 */
-	static public Set<Long> getSetOfLongParameter(Request request, String parameterName) {
-		String idsAsString = RequestUtils.getStringParameter(request, parameterName);
-		Set<Long> setOfLongs = null;
-		if (idsAsString != null && !idsAsString.trim().isEmpty()) {
-			setOfLongs = CommonUtils.convertToLongs(idsAsString);
+	static public List<Long> getListOfLongsParameter(Request request, String parameterName) {
+		String longsAsString = RequestUtils.getStringParameter(request, parameterName);
+		List<Long> listOfLongs = null;
+		if (longsAsString != null && !longsAsString.trim().isEmpty()) {
+			listOfLongs = CommonUtils.convertToListOfLongs(longsAsString);
 		}
-		return setOfLongs;
+		return listOfLongs;
+	}
+
+	static public List<String> getListOfStringsParameter(Request request, String parameterName) {
+		String commaSeparatedValues = RequestUtils.getStringParameter(request, parameterName);
+		if (commaSeparatedValues != null) {
+			return CommonUtils.convertToListOfStrings(commaSeparatedValues);
+		}
+		return null;
 	}
 
 	static public String getStringParameter(Request request, String parameterName) {
